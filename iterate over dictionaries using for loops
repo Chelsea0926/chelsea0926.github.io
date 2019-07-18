@@ -1,0 +1,3 @@
+d = {1: 10, 2: 20, 3: 30, 4: 40, 4: 5, 6: 60}
+for dic_key, dic_value in d.items():
+    print(dic_key, "->", dic_value)
