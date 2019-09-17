@@ -1,0 +1,30 @@
+第三方和自定义的library导入的时候要加.py
+
+-----------------------------------------------
+
+把当前根目录设置环境变量的命令是怎么写啦？
+1.	切换到当前case的父层级路径
+2.	Robot –pythonpath . loop1.robot(this is class name)
+
+----------------------------------------------
+
+Method of run a test suit of test cases at one time.
+ 
+-------------------------------------------------
+
+setTimeout(function(){debugger;},5000)
+
+如果一个测试套件里有5个测试用例，我想只执行里面的2个用例，cmd的运行语法怎么写呀
+
+------------------------------------------------------
+
+如果选择执行某2个套件怎么写呀
+E.G1:执行套件是：robot --suite home -- suite campany webtest
+e.g2: robot –suite loop1 lesson2
+---------------------------------------------------------
+ 
+同时执行某个文件夹下面的某2个套件
+Robot –pythonpath . loop2.robot loop2.robot
+ 
+
+
