@@ -1,0 +1,89 @@
+selenium+python自动化99-清空输入框clear()失效问题解决
+前言
+在使用selenium做UI自动化的时候，发现有些弹出窗上的输入框，输入文本后，使用clear()方法无效。
+这样会导致再次输入时，字符串不是清空后输入，而是跟着后面输入一长串，导致结果不准。
+经过几次尝试，先click()点击该输入框，再输入，发现还是无效，最终有以下2种方法可以解决
+
+使用双击输入框后，全选文本再输入就可以了
+使用js清空输入框文本
+问题描述
+在有些弹出的页面上，输入框输入文本，是可以正常输入的，比如我第一次输入测试数据：yoyo
+
+
+
+第二次，我想换个测试数据，先clear,再输入文本：悠悠
+
+
+
+结果清空文本框无效，两次输入的字符串是累加的
+
+方法1：双击输入框
+先封装双击元素方法写到base.py文件
+
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium import webdriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.select import Select
+import time
+
+class Base():
+    # # 作者：上海悠悠，QQ交流群：750815713
+
+    def __init__(self, driver):
+        self.driver = driver
+
+    def find(self, locator):
+        '''查找元素，loctor = ("id", "kw")'''
+        element = WebDriverWait(self.driver, 30, 1).until(EC.presence_of_element_located(locator))
+        return element
+
+    def click(self, locator):
+        '''点击元素'''
+        self.find(locator).click()
+
+    def double_click(self,locator):
+        '''双击事件'''
+        element = self.find(locator)
+        ActionChains(self.driver).double_click(element).perform()
+
+    def send(self, locator, text):
+        '''发送文本'''
+        self.find(locator).send_keys(text)
+运行代码
+
+# 作者：上海悠悠，QQ交流群：750815713
+
+driver = webdriver.Firefox()
+driver.get("https://www.baidu.com")
+baidu = Base(driver)
+# 输入框
+loc = ("id", "kw")
+baidu.send(loc, "yoyo")
+time.sleep(3)
+# 方法一:双击
+baidu.double_click(loc)
+# 重新输入
+baidu.send(loc, "上海-悠悠")
+双击之后，不用清空，重新输入就可以了
+
+方法2:JS清空文本框
+第二种解决思路，可以用万能的js，只要selenium遇到的坑，都可以用js去解决。
+
+# 作者：上海悠悠，QQ交流群：750815713
+driver = webdriver.Firefox()
+driver.get("https://www.baidu.com")
+baidu = Base(driver)
+# 输入框
+loc = ("id", "kw")
+baidu.send(loc, "yoyo")
+time.sleep(3)
+# # 方法一：双击
+# baidu.double_click(loc)
+# # 重新输入
+# baidu.send(loc, "上海-悠悠")
+
+# 方法二：万能的js
+js = 'document.querySelector("#kw").value="";'
+driver.execute_script(js)
+baidu.send(loc, "上海-悠悠")
